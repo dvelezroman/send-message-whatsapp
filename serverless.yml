@@ -1,0 +1,31 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: caffeinasw
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: send-message-whatsapp
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: send-message-whatsapp
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  environment:
+    TWILIO_ACCOUNT_SID: ${env:TWILIO_ACCOUNT_SID}
+    TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
+    TWILIO_PHONE_NUMBER: ${env:TWILIO_PHONE_NUMBER}
+
+functions:
+  hello:
+    handler: hello/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  sendMessage:
+    handler: handler/sendMessage.handler
+    events:
+      - http:
+          path: send-message
+          method: post
+
+plugins:
+  - serverless-offline
